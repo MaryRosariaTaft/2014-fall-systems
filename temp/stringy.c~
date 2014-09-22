@@ -1,0 +1,25 @@
+#include <stdlib.h>
+
+int strlen(char*);
+/* int strcpy(char,char); */
+/* int strncpy(char,char); */
+/* int strcat(char,char); */
+/* itn strncat(char,char); */
+/* int strcmp(char,char); */
+
+int main(){
+
+  printf("\n");
+
+  printf("testing strlen: %d \n",strlen("testsfasdfasdfasd"));
+
+  return 0;
+}
+
+int strlen(char *s){
+  int i=0;
+  while(s[i]){
+    i++;
+  }
+  return i;
+}
