@@ -1,0 +1,8 @@
+all: withmain.o withfunctions.o
+     gcc -o test withmain.o withfunctions.o
+
+withfunctions.o: withfunctions.c withfunctions.h
+     gcc -c withfunctions.c
+
+withmain.o: withmain.c withfunctions.h
+     gcc -c withmain.c

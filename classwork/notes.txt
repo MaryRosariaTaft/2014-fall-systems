@@ -1,0 +1,92 @@
+2014-10-02
+
+multiple c files can be compiled on the same line as long as their functions don't conflict
+
+a file without a main function can't be gcc'd by itself
+
+a file which calls a function that exists in another file can't be gcc'd alone
+
+withmain.c
+withfunctions.c
+
+gcc withmain.c withfunctions.c --> good
+gcc (either).c --> no good
+
+BUT to check for compiler errors in either, use the compile-only param
+
+gcc -c withmain.c --> good
+gcc -c withfunctions.c --> also good
+
+gcc -c <file> will create a <filename>.o file which contains the binary of the file
+
+*gcc does more than just compile
+
+----------
+don't know how, but .o files can be linked with .c files using gcc
+----------
+
+gcc -o allows you to specify the filename of the executable
+
+gcc -o someexecutablename withmain.c
+
+then $someexecutablename will run the program output from withmain.c
+
+called a flag
+
+---------
+
+Make
+
+used to create compiling instructions
+
+syntax:
+
+<TARGET>: <DEPENDENCIES>
+TAB<RULES>
+
+e.g.:
+
+all: withmain.o withfunctions.o
+     gcc -o test withmain.o withfunctions.o
+(excellent optional: add "make clean" here)
+(but do not do not add "clean" as a dependency)
+
+withfunctions.o: withfunctions.c withfunctions.h //(header file)
+     gcc -c withfunctions.c
+
+withmain.o: withmain.c withfunctions.c
+     gcc -c withmain.c
+
+clean: (no dependencies)
+     rm *.o
+     rm *~
+
+
+
+2014-10-03
+
+using make:
+
+make a file called "makefile" in the folder with all your c programs, headers, and compiled binary code (.c, .h, and .o)
+
+write the stuff
+
+run "make" in the terminal (in the folder where you have the files you want to compile)
+
+HOWEVER, when you run "make," the "clean" target won't get automatically run
+
+can also run "make <file/target>" to update a particular file
+
+"make clean" will do whatever file cleaning you assign it to do
+      (such an excellent couplet of keywords)
+
+IMPORTANT: make will stop running at the first error it sees
+
+-------------------
+
+NOTE: dot (membership) operator takes precedence over the dereference operator
+
+*p.x doesn't work
+
+(*p).x does
+equivalent to p->x
