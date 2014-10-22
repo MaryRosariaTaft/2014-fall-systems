@@ -90,3 +90,39 @@ NOTE: dot (membership) operator takes precedence over the dereference operator
 
 (*p).x does
 equivalent to p->x
+
+_______________________________________________
+
+17. OKTOBER 2014
+
+OCTAL NUMMERN ANFAENGT MIT '0'
+
+z.B. (0644)
+
+DANN WIRD C NICHT GLAUBT, DASS ES EIN DECIMAL NUMMER IST.
+
+(meine Deutsch ist gebrochen)
+
+O_RDONLY - nur lesen
+O_WRONLY - nur schreiben
+O_RDWR - lesen und schreiben
+O_APPEND - gee I wonder what
+O_TRUNC - halten
+O_CREAT - machen
+O_EXCL - machen, nur wenn das File nicht noch existier
+
+------------------
+
+bitwise operators - a logical operator that acts on each bit
+
+&
+|
+~ (not)
+^ (exclusive or [xor])
+
+e.g.
+
+char c = 13; // 00001101
+char x = ~c; // 11110010 <--negation of each bit of the binary equivalent of 13
+
+
