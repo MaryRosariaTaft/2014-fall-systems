@@ -9,9 +9,9 @@ int main(){
   int f = fork();
 
   if(!f){
-    execl("/bin/ls","ls","-a","-l",NULL);
+    execl("/bin/ls","ls","-a","-l",NULL); //child
   }else{
-
+    //parent
   }
 
   printf("after executing\n");
