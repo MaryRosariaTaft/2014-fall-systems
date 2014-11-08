@@ -11,22 +11,15 @@
 
 int main(){
 
-  // I can't even print out the problems I'm having because when I add or remove or change the print statements--even the ones without variables--I get a "symbol lookup error", specifically, "undefined symbol: putchar"
-  // and as the code is, there's another symbol lookup error, "undefined symbol: closedir", which I don't understand, especially since I included <sys/types.h> and <dirent.h>
-  // anyway, regarding total directory size:
-  // I tried making a recursive function, and that failed (please see the comments above/within size())
-  // and since it failed, I tried using a variable 'dir_size' inside of list_files(); and that failed, too
-  // Life is generally frustrating.  My apologies.
-
   printf("\n");
 
   char path[256];
   getcwd(path,256);
   strcat(path,"/");
 
-  list_files(path);
+  //list_files(path);
 
-  //printf("size: %d \n",size(path));
+  printf("size (including subdirectories): %d\n\n", fsize(path));
 
   return 0;
 
@@ -38,91 +31,80 @@ void list_files(char *path){
   d = opendir(path);
   struct dirent *info; //file information
 
-  struct stat *stats; //more file information
+  struct stat stats; //more file information
 
   //set up path to be edited for each file
   char current_path[256];
   strcpy(current_path,path);
   int len = strlen(current_path);
 
-  //int dir_size; //get rid of this after size() works
-
   printf("directory: %s \n",current_path);
-  //printf("total size: %d \n",size(current_path));
   printf("files: \n");
 
   while (info = readdir(d)){
   
     //update stat buffer for each file
     strcpy(&current_path[len],info->d_name);
-    stat(current_path,stats);
+    stat(current_path,&stats);
 
     printf("\t");
-    printf("%o\t",stats->st_mode%(8*8*8)); //mod it so that the file type doesn't show
-    printf("%d\t",(int)stats->st_size);
-    /* if(info->d_type!=DT_DIR){ */
-    /*   dir_size += (int)stats->st_size; */
-    /* } */
-    //once size() is working:
-    //first get rid of the above 'if' statement
-    //then write:
-    //if the current file *is* a directory
-    //strcat(current_path,"/");
-    //then just print size(current_path), directory or not
+    printf("%o\t",stats.st_mode%(8*8*8)); //mod it so that the file type doesn't show
+    printf("%d\t",(int)stats.st_size);
     printf("%d\t",info->d_type);
-    //oh joy, this causes an error, too:
-    //printf("%s\t",ctime(stats->st_mtime));
     printf("%s\t",info->d_name);
     printf("\n");
   }
-
-  //don't know why this print statement isn't working
-  //printf("total size (not including subdirectories): %d",dir_size);
 
   closedir(d);
 
 }
 
+//precon: path has to be a directory path ending in a forward slash
+int fsize(char *path){
 
-//cannot figure out why stat() won't work with given path
-//therefore also have not tested the recursion
-
-/*
-
-int size(char *path){
-
-  int total_size=0;
+  printf("path: %s\n",path);
 
   DIR *d;
   d = opendir(path);
   struct dirent *info;
 
-  struct stat *stats;
+  struct stat stats;
 
   char current_path[256];
   strcpy(current_path,path);
   int len = strlen(current_path);
 
+  int size=0;
+
   while (info = readdir(d)){
   
     strcpy(&current_path[len],info->d_name);
-    stat(current_path,stats);
-    printf("path: %s\n",current_path);
-    printf("%s\n\n",strerror(errno));
+    stat(current_path,&stats);
 
-     if(info->d_type==DT_DIR){
-      //if the file is a directory, strcat(current_path,"/")
-      //then: total_size += size(current_path);
-    }else{
-      //total_size += (int)stats->st_size;
+    printf("\tsubpath: %s\n",current_path);
+    printf("\tfilename: %s",info->d_name);
+    printf("\tfiletype: %d\n",info->d_type);
+
+    if(info->d_type!=DT_DIR){ //not a directory
+      printf("\t\tinside if\n");
+      size += (int)stats.st_size;
     }
-
+    if(info->d_type==DT_DIR){
+      printf("\t\tinside elseif\n");
+      if(!strcmp(info->d_name,"..") || !strcmp(info->d_name,".")){
+	printf("\t\tspecial cond\n");
+      }else{
+	printf("\t\tspecial else\n");
+	strcat(current_path,"/");
+	size += fsize(current_path);
+      }
+      //size += fsize(current_path);
+    }
+    
   }
 
   closedir(d);
 
-  return total_size;
-  
-}
+  return size;
 
-*/
+}
