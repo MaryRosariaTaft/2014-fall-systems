@@ -42,4 +42,13 @@ shmat(descriptor, address, flags)
    int sd = shmget(2354269, 1024, IPC_CREAT | 0644);
    char *p = shmat(sd,0,0);
 
+
+ftok(char *path, int id) <sys/ipc.h>
+- attempts to create a unique key suitable for use with shmget, given the path of an existing file and a user-selected I.D.
+- better alternative to slamming the number pad with forehead
+- the path must be accessible by the program running
+
+   int sd = shmget(ftok("somedir/somesubdir/somefile", random_number), 1024, IPC_CREAT | 0644);
+   char *p = shmat(sd,0,0);
+
  */
