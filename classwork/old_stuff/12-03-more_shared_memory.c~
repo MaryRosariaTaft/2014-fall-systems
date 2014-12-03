@@ -1,0 +1,10 @@
+/*
+
+shmat(descriptor, address, flags)
+- descriptor: return value of shmget
+- address: some memory address (if you enter 0, your OS will give you an address by default)
+- flags: in most cases, either:
+   - 0 (no flags)
+   - SHM_RDONLY --> makes the memory read-only (hah couldn't've guessed)
+
+ */

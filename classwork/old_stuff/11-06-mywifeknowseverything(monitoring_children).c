@@ -1,3 +1,5 @@
+/*
+
 wait(int *status) <unistd.h>
 
 stops a parents process from running until any child has changed its status (e.g. running-->completed, running-->terminated, foreground-->background, etc.)
@@ -43,3 +45,5 @@ PATH: path to the program (e.g. "/bin/ls")
 COMMAND: name of the program (e.g. "ls")
 ARGS: command-line arguments (e.g. "-l")
 NULL is a necessary last parameter
+
+*/
