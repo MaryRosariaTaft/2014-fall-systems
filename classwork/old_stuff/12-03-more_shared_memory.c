@@ -14,7 +14,7 @@ int main(){
 
   if(!f){
 
-    p = shmat(sd, 0, 0);
+    p = (char *)shmat(sd, 0, 0); //type-casting is preferable but not necessary
     *p = 'X';
     printf("child: &p = %s\n", p);
     printf("child: p = %p\n", p);
