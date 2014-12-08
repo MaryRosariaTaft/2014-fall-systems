@@ -1,3 +1,5 @@
+//Please do not try to compile this.
+
 /*
 
 semctl(descriptor, index, operation, buffer) <sys/types.h> <sys/ipc.h>
@@ -14,7 +16,11 @@ semctl(descriptor, index, operation, buffer) <sys/types.h> <sys/ipc.h>
       IPC_RMID: remove the semaphore
       SETVAL: set the value (requires using a buffer)
       GETVAL: return the value
-   - buffer
+   - buffer: variable for storing information about the semaphore (type union semun)
+      valu - data member used in SETVAL
+- note: there's a SETALL flag to set an entire set of semaphores to the same value
+
+See below for example code.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -46,3 +52,15 @@ while(i<4){
 }
 
  */
+
+//set
+union semun su;
+su.val = 3;
+semctl(semd, 0, SETVAL, su);
+
+//get
+int sval;
+sval = semctl(semd, 0, GETVAL);
+
+//remove
+semctl(semd, 0, IPC_RMID);
