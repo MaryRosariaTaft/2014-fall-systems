@@ -1,0 +1,10 @@
+
+
+
+/*
+
+semop()
+- perform semaphore operations (like Up/Down)
+- all operations performed via semop are atmoic
+
+ */
