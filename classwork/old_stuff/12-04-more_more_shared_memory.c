@@ -53,7 +53,7 @@ shmctl(int descriptor, int command, struct shmid_ds *buffer) - shared memory con
 - parameters:
    - descriptor: return value of shmget
    - commands:
-      IPC_STAT: populate teh buffer (shmid_ds) with information
-      IPC_SET: set some of the info. for teh segment to the infor in the buffer
-      IPC_RMID: remove a shared memroy segment
+      IPC_STAT: populate the buffer (shmid_ds) with information
+      IPC_SET: set some of the information for the segment to the information in the buffer
+      IPC_RMID: remove a shared memory segment
  */

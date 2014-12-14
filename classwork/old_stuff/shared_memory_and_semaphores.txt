@@ -1,0 +1,18 @@
+Shared Memory
+=============
+
+create/access: shmget(key, size, flags)
+
+attach: shmat(return_val_of_shmget, address, flags)
+
+   int sd = shmget(ftok("somefile",1), sizeof(long), IPC_CREAT | 0644);
+   char *p = shmat(sd,0,0);
+
+edit: shmctl(return_val_of_shmget, command, struct shmid_ds)
+
+   shmct(sd, 
+   char *p = shmat(sd,0,0);
+
+detach: shmdt(return_val_of_shmat)
+
+remove: shmctl(return_val_of_shmget, IPC_RMID, NULL)
