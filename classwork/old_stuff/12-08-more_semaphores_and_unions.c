@@ -17,7 +17,7 @@ semctl(descriptor, index, operation, buffer) <sys/types.h> <sys/ipc.h>
       SETVAL: set the value (requires using a buffer)
       GETVAL: return the value
    - buffer: variable for storing information about the semaphore (type union semun)
-      valu - data member used in SETVAL
+      value - data member used in SETVAL
 - note: there's a SETALL flag to set an entire set of semaphores to the same value
 
 See below for example code.
