@@ -1,0 +1,3 @@
+shell command - mkfifo
+c function - mkfifo(name, permissions)
+access the pipes using open, read, write, etc.
