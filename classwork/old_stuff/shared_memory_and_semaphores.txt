@@ -1,0 +1,52 @@
+Shared Memory
+=============
+
+create/access: shmget(key, size, flags)
+
+attach: shmat(return_val_of_shmget, address, flags)
+
+edit: shmctl(return_val_of_shmget, command, struct shmid_ds)
+
+detach: shmdt(return_val_of_shmat)
+
+remove: shmctl(return_val_of_shmget, IPC_RMID, NULL)
+
+   int sd = shmget(ftok("somefile",1), sizeof(long), IPC_CREAT | 0644);
+   char *p = (char *)shmat(sd,0,0);
+   *p = 'x';
+   p = (char *)shmdt(p);
+   shmctl(sd, IPC_RMID, &d);
+
+Semaphores
+=============
+
+create/access: semget(key, amount, flags)
+
+set initial value, get a value, remove:
+semctl(return_val_of_semget, semaphore_index, command[, union semun IFF command requires it])
+
+get: Down(S) == P(S)
+release: Up(S) == V(S)
+semop(return_val_of_semget, pointer_to struct sembuf operation_buffer, number_of_semaphores_to_affect_NOT_THE_INDEX)
+
+struct sembuf sem_buf;
+sem_buf.sem_op = -1; //down
+sem_buf.sem_op = 1; //up
+sem_buf.sem_num = 0;
+sem_buf.sem_flag = SEM_UNDO;
+semop(return_val_of_semget, &sem_buf, 1);
+
+union semun {
+  int val; /* Value for SETVAL */
+  struct semid_ds *buf; /* Buffer for IPC_STAT, IPC_SET */
+  unsigned short *array; /* Array for GETALL, SETALL */
+  struct seminfo *__buf; /* Buffer for IPC_INFO */
+} sem_union;
+
+int value_to_set;
+union semun sem_union;
+sem_union.val = value_to_set;
+semctl(semd, 0, SETVAL, sem_union);
+
+int value_to_get;
+value_to_get = semctl(semd, 0, GETVAL);

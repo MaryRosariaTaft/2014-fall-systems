@@ -44,7 +44,7 @@ semaphore operations
      S--
 
 semget(key, amount, flags) <sys/types.h> <sys/ipc.h> <sys/sem.h>
-- create/get access to a semaphore (NOT teh same as Up(S) --> the semaphore is not modified by semget())
+- create/get access to a semaphore (NOT the same as Up(S) --> the semaphore is not modified by semget())
 - returns either a semaphore descriptor or -1
 - params:
    - key: unique semaphore identifier (use ftok()!)
