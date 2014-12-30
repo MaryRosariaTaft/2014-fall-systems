@@ -1,12 +1,12 @@
 int main(){
 
-  int from_server;
-  int to_server;
+  int from_client;
+  int to_client;
   char line[100];
 
-  sprintf(line, "%d",getpid());
+  //well-known pipe
   mkdfifo("mario",0644);
-  from_client = opem("mario",O_RDONLY);
+  from_client = open("mario",O_RDONLY);
   read(from_client,line,sizeof(line));
 
   //process

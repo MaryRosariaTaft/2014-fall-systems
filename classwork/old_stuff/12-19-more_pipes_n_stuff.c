@@ -22,7 +22,7 @@ int main(){
 
   *from_server = open(line, O_RDONLY);
   read(*from_server, line, sizeof(line));
-  printf("<client> receiver +%s+\n",line);
+  printf("<client> received +%s+\n",line);
 
   return to_server;
 
