@@ -14,7 +14,7 @@ basic server
 forking server
 - steps 1-5 same as above
 - server receives client's message and forks off a subserver
-- main server removes the well-known piep and closes the connection with the client
+- main server removes the well-known pipe and closes the connection with the client
 - main server creates a new well-knwon pipes and waits for a new client
 - subserver connects to the new client pipe, sending an initial acknowledgement message
 - client receives server's message, then removes its private pipe
