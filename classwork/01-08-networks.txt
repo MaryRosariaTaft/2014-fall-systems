@@ -1,0 +1,33 @@
+how do networks work?
+through nets
+
+why do we need networks when we can just have floppy drives lined up next to each other and have them shoot the floppy disks back and forth
+
+
+
+====OSI 7-layer model====
+
+- used to help conceptualize the different parts of network connections
+
+top layer is the most concrete; each subsequent layer becomes more abstract (relying less on physical conenctions and more on code; each relies on the success of all the previous)
+
+1. physical
+2. data link
+3. network
+4. transport
+5. session
+6. presentation
+7. application
+
+==================
+
+1: PHYSICAL
+
+e.g. electricity (wooo), radio signal pulses, etc.
+
+history time!
+- Thicknet - used a single coax cable and vampire taps for each computer
+- Thinnet - also a single coax cable, but T-junctions are used for splitting
+issues for both - power drain, no privacy (selective information sharing)
+- token ring - no _single_ network resource used; computers are connected in series
+only once computer could send data at a time (you "had the token")
