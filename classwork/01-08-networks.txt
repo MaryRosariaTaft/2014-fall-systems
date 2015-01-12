@@ -31,3 +31,82 @@ history time!
 issues for both - power drain, no privacy (selective information sharing)
 - token ring - no _single_ network resource used; computers are connected in series
 only once computer could send data at a time (you "had the token")
+- ethernet - multiple computers conenct to a single hub (still no privacy though) or switch (selective sharing, although there's a danger of physical collision during data transfer--but that's for someone else to worry about, see 2. DATA LINK)
+
+NOTE: _wireless access points_ act like hubs
+
+(barely relevant)
+"don't make computers intelligent, just make humans computers"
+(end barely relevant)
+
+==================
+
+2. DATA LINK
+
+point-to-point transmission between devices on the same (local) network (e.g. connected to the same switch or access point)
+
+each device has a unique 6-byte MAC (Media Access Control) address; set on each network card at the time of production (built into the logic of the card)
+
+data is packaged into frames
+
+ethernet frame:
+	 <prefix><dest><source><...><data><checksum>
+            8      6      6      6  46-1500    4     bytes
+
+prefix: 10101010 (7 of those, and then) 10101011 (the 1 last byte)
+dest/src: MAC addresses
+"...": some information about the frame which we shall not be taught
+data: data
+checksum: ensures data integrity
+
+==================
+
+3. NETWORK LAYER
+
+transmission of date btwn 2+ separate networks
+
+not concerned with whether data was sent successfully / connection does nto work
+
+major features are addressing, routing, and packet forwarding
+
+IP (Internet protocol) addresses
+   IPv4: 4 byte address
+   [0-255] . [0-255] . [0-255] . [0-255]  (no leading 0s!)
+
+will never be 127.0.0.1 --> that's a loop back to yourself (localhost)
+
+***THE TIMES THEY ARE A CHANGIN'***
+
+IPv6: 8 groups of 4 hexadecimal digits
+
+# addresses increases from 2^32 (IPv4) to 2^128 (IPv6)
+
+current addresses would be translated to 0000 : 0000: 0000 : ffff : ---.---.---.---
+
+MTU (see below!) would be increased to 2^32
+
+***********************************
+
+IANA - Internet Assigned Numbers Authority
+
+Class A network - first # is fixed (e.g. Apple has the leading # 17, so all their IP addresses are 17.-.-.-)
+Class B - 149.89.-.- (gee I wonder...)
+Class C you can figure it out
+
+isp - Internet service provider (well.)
+
+ARP - Address Resolution Protocol (translates from IP to MAC and vice versa)
+
+--------
+
+data is broken into units similar to frames but modified for the network layer (such as using IP addresses instead of MAC addresses)
+
+types of units:
+
+packets
+
+datagrams
+
+MTU (max. transmission unit - most data that can be put in a packet or datagrams) is 65,535 for IPv4
+(data link layers' MTUs are smaller)
+
