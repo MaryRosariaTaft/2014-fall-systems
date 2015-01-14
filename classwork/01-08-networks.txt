@@ -85,7 +85,7 @@ current addresses would be translated to 0000 : 0000: 0000 : ffff : ---.---.---.
 
 MTU (see below!) would be increased to 2^32
 
-***********************************
+--------
 
 IANA - Internet Assigned Numbers Authority
 
@@ -102,11 +102,72 @@ ARP - Address Resolution Protocol (translates from IP to MAC and vice versa)
 data is broken into units similar to frames but modified for the network layer (such as using IP addresses instead of MAC addresses)
 
 types of units:
-
-packets
-
-datagrams
+- packets
+- datagrams
 
 MTU (max. transmission unit - most data that can be put in a packet or datagrams) is 65,535 for IPv4
 (data link layers' MTUs are smaller)
 
+REDUNDANCY and traffic splitting
+
+==================
+
+4. TRANSPORT
+
+involves _ports_
+
+"In computer networking, a port is an application-specific or process-specific software construct serving as a communications endpoint in a computer's host operating system. The purpose of ports is to uniquely identify different applications or processes running on a single computer and thereby enable them to share a single physical connection to a packet-switched network like the Internet." -Wikipedia
+
+each destination address (IP address) has multiple ports for multiple types of connections
+
+65,535 ports (16-bit)
+       ports < 1024 are well-known/reserved
+       (e.g. port 80 is for HTTP like web browsers; port 22 for SSH)
+
+written [for example] 127.0.0.1:5000
+
+port numbers are also regulated by the IANA
+
+--------
+
+TCP (Transmission Control Protocol)
+- "reliable" connection (data can be sent and received from connected machines)
+- guarantees data delivery
+- data is _recognized_ as arriving in the order that it was sent (even though packets may likely get chopped up and sent out of order when traveling through the network layer)
+  - if packets are dropped, the machine/program/whatever which *sent* that packet will be notified that said packets have to be resent
+  - note: dropped packets automatically disappear after a certain amount of time so as not to clog the internet with data hanging around
+- connections are est. using a "3-way handshake"
+
+  Host A sends a TCP SYNchronize packet to Host B
+
+  Host B receives A's SYN
+
+  Host B sends a SYNchronize-ACKnowledgement
+
+  Host A receives B's SYN-ACK
+
+  Host A sends ACKnowledge
+
+  Host B receives ACK.
+  TCP socket connection is ESTABLISHED.
+
+      - http://www.inetdaemon.com/tutorials/internet/tcp/3-way_handshake.shtml#sthash.jGFr9nBy.dpuf
+
+(
+1. client sends SYN
+2. server sends SYN_ACK
+3. cilent sends ACK
+)
+
+^That's what we wrote manually for our pipe-connected server-client programs; sockets using TCP _automatically_ do the 3-point communication check (woohoo, built-in stuff)
+
+--------
+
+UDP (User Datagram Protocol)
+- NO VERIFICATION that the server is listening to or *getting* the info from the client
+  (verification can be done, but it must be added manually)
+- data is sent as discrete datagrams, *not* interpreted as a continuous stream
+  - may be received out of order, or datagrams may be dropped
+  - if a packet comes out of order, the receiving software might _intentionally_ drop it (e.g. video streaming)
+- sounds terrible but it's a LOT faster than TCP
+- main protocol for nearly all media streaming
