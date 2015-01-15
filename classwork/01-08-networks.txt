@@ -171,3 +171,26 @@ UDP (User Datagram Protocol)
   - if a packet comes out of order, the receiving software might _intentionally_ drop it (e.g. video streaming)
 - sounds terrible but it's a LOT faster than TCP
 - main protocol for nearly all media streaming
+
+Sooooooockets
+- connection btwn. 2 computers created programmatically
+- bidirectional
+  - each end consists of an IP address and a port
+
+using a socket:
+- create said socket (doh)
+- bind it to an IP address and a port
+- listen / initiate a connection*
+  *note: only for TCP sockets
+- send/receive data
+
+
+int socket(int domain, int type, int protocol) <sys/types.h> <sys/socket.h>
+- creates a socket
+- returns a socket descriptor (sets errno for errors)
+
+domain: type of address (AF_INET==IPv4, AF_INET6==IPv6)
+
+type: tcp/udp (SOCK_STREAM==tcp, SOCK_DGRAM==udp)
+
+protocol: combination of domain and type (use 0 to base protocol on the entered domain and type)
