@@ -190,7 +190,29 @@ int socket(int domain, int type, int protocol) <sys/types.h> <sys/socket.h>
 - returns a socket descriptor (sets errno for errors)
 
 domain: type of address (AF_INET==IPv4, AF_INET6==IPv6)
-
 type: tcp/udp (SOCK_STREAM==tcp, SOCK_DGRAM==udp)
-
 protocol: combination of domain and type (use 0 to base protocol on the entered domain and type)
+
+--------------
+
+bind(int sockfd, struct sockaddr *addr, socklen_t addrlen) <same as above>
+- returns 0 (success) or -1 (failure)
+*note: a server might not bind to any incoming address but only a specific port, whereas a client would bind to a specific address
+
+sockfd (descriptor): return value of socket
+addr[ess]: pointer to a sockaddr struct
+
+sockaddr_in (NOT sockaddr, which is a struct within this struct...)
+{ sin_family: address type (AF_INET)
+  sin_addr: IP address in binary
+  	     -> inet_aton(string, address variable) --> converts a string representing an IP address to binary
+	    	 (a to n --> alphanumeric value to network something or other)
+  	    INADDR_ANY: used to denote *any* incoming connection
+  sin_port: -> htons(int) will return the port in the correct order
+  	         (h to ns --> converts port number to little endian notation, see below)
+}
+
+^those are quite confusing notes, look at the sample code
+
+*note: computers store integers in little endian notation (most significant byte is _last_) ah do some wiki'ing
+       "big endian" --> most significant byte comes first (i.e. millions digit before hundred-thousands)
