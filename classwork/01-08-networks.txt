@@ -1,0 +1,218 @@
+how do networks work?
+through nets
+
+why do we need networks when we can just have floppy drives lined up next to each other and have them shoot the floppy disks back and forth
+
+
+
+====OSI 7-layer model====
+
+- used to help conceptualize the different parts of network connections
+
+top layer is the most concrete; each subsequent layer becomes more abstract (relying less on physical conenctions and more on code; each relies on the success of all the previous)
+
+1. physical
+2. data link
+3. network
+4. transport
+5. session
+6. presentation
+7. application
+
+==================
+
+1: PHYSICAL
+
+e.g. electricity (wooo), radio signal pulses, etc.
+
+history time!
+- Thicknet - used a single coax cable and vampire taps for each computer
+- Thinnet - also a single coax cable, but T-junctions are used for splitting
+issues for both - power drain, no privacy (selective information sharing)
+- token ring - no _single_ network resource used; computers are connected in series
+only once computer could send data at a time (you "had the token")
+- ethernet - multiple computers conenct to a single hub (still no privacy though) or switch (selective sharing, although there's a danger of physical collision during data transfer--but that's for someone else to worry about, see 2. DATA LINK)
+
+NOTE: _wireless access points_ act like hubs
+
+(barely relevant)
+"don't make computers intelligent, just make humans computers"
+(end barely relevant)
+
+==================
+
+2. DATA LINK
+
+point-to-point transmission between devices on the same (local) network (e.g. connected to the same switch or access point)
+
+each device has a unique 6-byte MAC (Media Access Control) address; set on each network card at the time of production (built into the logic of the card)
+
+data is packaged into frames
+
+ethernet frame:
+	 <prefix><dest><source><...><data><checksum>
+            8      6      6      6  46-1500    4     bytes
+
+prefix: 10101010 (7 of those, and then) 10101011 (the 1 last byte)
+dest/src: MAC addresses
+"...": some information about the frame which we shall not be taught
+data: data
+checksum: ensures data integrity
+
+==================
+
+3. NETWORK LAYER
+
+transmission of date btwn 2+ separate networks
+
+not concerned with whether data was sent successfully / connection does nto work
+
+major features are addressing, routing, and packet forwarding
+
+IP (Internet protocol) addresses
+   IPv4: 4 byte address
+   [0-255] . [0-255] . [0-255] . [0-255]  (no leading 0s!)
+
+will never be 127.0.0.1 --> that's a loop back to yourself (localhost)
+
+***THE TIMES THEY ARE A CHANGIN'***
+
+IPv6: 8 groups of 4 hexadecimal digits
+
+# addresses increases from 2^32 (IPv4) to 2^128 (IPv6)
+
+current addresses would be translated to 0000 : 0000: 0000 : ffff : ---.---.---.---
+
+MTU (see below!) would be increased to 2^32
+
+--------
+
+IANA - Internet Assigned Numbers Authority
+
+Class A network - first # is fixed (e.g. Apple has the leading # 17, so all their IP addresses are 17.-.-.-)
+Class B - 149.89.-.- (gee I wonder...)
+Class C you can figure it out
+
+isp - Internet service provider (well.)
+
+ARP - Address Resolution Protocol (translates from IP to MAC and vice versa)
+
+--------
+
+data is broken into units similar to frames but modified for the network layer (such as using IP addresses instead of MAC addresses)
+
+types of units:
+- packets
+- datagrams
+
+MTU (max. transmission unit - most data that can be put in a packet or datagrams) is 65,535 for IPv4
+(data link layers' MTUs are smaller)
+
+REDUNDANCY and traffic splitting
+
+==================
+
+4. TRANSPORT
+
+involves _ports_
+
+"In computer networking, a port is an application-specific or process-specific software construct serving as a communications endpoint in a computer's host operating system. The purpose of ports is to uniquely identify different applications or processes running on a single computer and thereby enable them to share a single physical connection to a packet-switched network like the Internet." -Wikipedia
+
+each destination address (IP address) has multiple ports for multiple types of connections
+
+65,535 ports (16-bit)
+       ports < 1024 are well-known/reserved
+       (e.g. port 80 is for HTTP like web browsers; port 22 for SSH)
+
+written [for example] 127.0.0.1:5000
+
+port numbers are also regulated by the IANA
+
+--------
+
+TCP (Transmission Control Protocol)
+- "reliable" connection (data can be sent and received from connected machines)
+- guarantees data delivery
+- data is _recognized_ as arriving in the order that it was sent (even though packets may likely get chopped up and sent out of order when traveling through the network layer)
+  - if packets are dropped, the machine/program/whatever which *sent* that packet will be notified that said packets have to be resent
+  - note: dropped packets automatically disappear after a certain amount of time so as not to clog the internet with data hanging around
+- connections are est. using a "3-way handshake"
+
+  Host A sends a TCP SYNchronize packet to Host B
+
+  Host B receives A's SYN
+
+  Host B sends a SYNchronize-ACKnowledgement
+
+  Host A receives B's SYN-ACK
+
+  Host A sends ACKnowledge
+
+  Host B receives ACK.
+  TCP socket connection is ESTABLISHED.
+
+      - http://www.inetdaemon.com/tutorials/internet/tcp/3-way_handshake.shtml#sthash.jGFr9nBy.dpuf
+
+(
+1. client sends SYN
+2. server sends SYN_ACK
+3. cilent sends ACK
+)
+
+^That's what we wrote manually for our pipe-connected server-client programs; sockets using TCP _automatically_ do the 3-point communication check (woohoo, built-in stuff)
+
+--------
+
+UDP (User Datagram Protocol)
+- NO VERIFICATION that the server is listening to or *getting* the info from the client
+  (verification can be done, but it must be added manually)
+- data is sent as discrete datagrams, *not* interpreted as a continuous stream
+  - may be received out of order, or datagrams may be dropped
+  - if a packet comes out of order, the receiving software might _intentionally_ drop it (e.g. video streaming)
+- sounds terrible but it's a LOT faster than TCP
+- main protocol for nearly all media streaming
+
+Sooooooockets
+- connection btwn. 2 computers created programmatically
+- bidirectional
+  - each end consists of an IP address and a port
+
+using a socket:
+- create said socket (doh)
+- bind it to an IP address and a port
+- listen / initiate a connection*
+  *note: only for TCP sockets
+- send/receive data
+
+
+int socket(int domain, int type, int protocol) <sys/types.h> <sys/socket.h>
+- creates a socket
+- returns a socket descriptor (sets errno for errors)
+
+domain: type of address (AF_INET==IPv4, AF_INET6==IPv6)
+type: tcp/udp (SOCK_STREAM==tcp, SOCK_DGRAM==udp)
+protocol: combination of domain and type (use 0 to base protocol on the entered domain and type)
+
+--------------
+
+bind(int sockfd, struct sockaddr *addr, socklen_t addrlen) <same as above>
+- returns 0 (success) or -1 (failure)
+*note: a server might not bind to any incoming address but only a specific port, whereas a client would bind to a specific address
+
+sockfd (descriptor): return value of socket
+addr[ess]: pointer to a sockaddr struct
+
+sockaddr_in (NOT sockaddr, which is a struct within this struct...)
+{ sin_family: address type (AF_INET)
+  sin_addr: IP address in binary
+  	     -> inet_aton(string, address variable) --> converts a string representing an IP address to binary
+	    	 (a to n --> alphanumeric value to network something or other)
+  	    INADDR_ANY: used to denote *any* incoming connection
+  sin_port: -> htons(int) will return the port in the correct order
+  	         (h to ns --> converts port number to little endian notation, see below)
+}
+
+^those are quite confusing notes, look at the sample code
+
+*note: computers store integers in little endian notation (most significant byte is _last_) ah do some wiki'ing
+       "big endian" --> most significant byte comes first (i.e. millions digit before hundred-thousands)
