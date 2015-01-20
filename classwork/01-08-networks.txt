@@ -216,3 +216,40 @@ sockaddr_in (NOT sockaddr, which is a struct within this struct...)
 
 *note: computers store integers in little endian notation (most significant byte is _last_) ah do some wiki'ing
        "big endian" --> most significant byte comes first (i.e. millions digit before hundred-thousands)
+
+--------------
+
+connect(descriptor, address, address size) FOR TCP CLIENTS ONLY, not udp
+
+- address: pointer to address
+- size: regular sizeof() call
+- returns 0 or -1
+
+listen(descriptor, queue size / backlog) ALSO FOR TCP ONLY
+
+- puts the socket into a listening state
+- descriptor: whatchamacallitthesameasalways
+- queue/backlog: basically ignored nowadays; used to be the max # of clients which could wait to connect to a server
+  		 *note: like with pipes, once a server is occupied with a socket connection and connected to a client, it can't connect to another client (solution could similarly be forking off subservers for each client)
+		 SO, just use 1 nowadays
+- returns 0 or -1
+
+accept(descriptor, address, address length) ALSO ONLY FOR TCP ah
+- handles 3-way handhskae
+- creates a new socket with the correct client end, returns a descriptor to the new socket [ON THE SAME PORT]
+- descriptor: return value of socket
+- address & address length: info about the specificclient that is connected to the new socket (can be left NULL)
+
+~-~-~-~-~-~-~-~-~
+
+UDP
+
+recvfrom / sendto (instead of read/write for tcp)
+
+both functions have the same params
+
+recvfrom(socket descriptor, buffer, buffer size, flags, socket address, address length)
+buffer: where to put the data
+flags: not today, lad (stuff about udp connection)
+
+both return # of bytes received
