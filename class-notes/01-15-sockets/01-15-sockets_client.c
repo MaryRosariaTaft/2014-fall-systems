@@ -26,7 +26,7 @@ int main(int argc, char **argv){
   i = connect(socket_id, (struct sockaddr *)(&sock), sizeof(sock));
   printf("connect returned: %d\n", i);
   if(i==-1){
-    printf("error: %s", strerror(errno));
+    printf("error: %s\n", strerror(errno));
   }
 
   //if i==0 then read() and write() work 
