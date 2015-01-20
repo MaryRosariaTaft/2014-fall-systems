@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <netinet/in.h>
+#include <errno.h>
+#include <string.h>
 
 int main(int argc, char **argv){
 
@@ -23,8 +25,8 @@ int main(int argc, char **argv){
   //attempt a connection
   i = connect(socket_id, (struct sockaddr *)(&sock), sizeof(sock));
   printf("connect returned: %d\n", i);
-  if(i){
-    //errno stuff and whatever
+  if(i==-1){
+    printf("error: %s", strerror(errno));
   }
 
   //if i==0 then read() and write() work 

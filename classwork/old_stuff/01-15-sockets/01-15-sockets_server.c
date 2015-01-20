@@ -29,6 +29,8 @@ int main(int argc, char **argv){
   socket_client = accept(socket_id, NULL, NULL);
   //socket_client is new the new socket descriptor
 
+  //have to close sockets somehwere sometime after doing stuff and while loops and such
+
   return 0;
 
 }
